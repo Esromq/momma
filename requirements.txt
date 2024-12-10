@@ -1,0 +1,11 @@
+os
+openai
+Client
+docx 
+Document
+dotenv 
+load_dotenv
+tiktoken
+flask 
+numpy
+requests==2.25.1
