@@ -4,6 +4,7 @@ from openai import Client
 from docx import Document
 from dotenv import load_dotenv
 import tiktoken
+<<<<<<< HEAD
 from flask import Flask, request, jsonify, render_template
 import numpy as np
 app = Flask(__name__, template_folder='templates')
@@ -12,6 +13,8 @@ app = Flask(__name__, template_folder='templates')
 def test():
     return "Flask is working!"
 
+=======
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -29,6 +32,7 @@ client = Client(api_key=api_key)  # Pass the API key to the client
 # Define the path to the folder containing doc files
 folder_path = "./static/files"
 
+<<<<<<< HEAD
 # Global variable to store document content
 documents_content = {}
 
@@ -54,6 +58,8 @@ else:
 
 
 
+=======
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
 # Function to list all .docx files in the folder
 def list_documents_in_folder(folder):
     documents = []
@@ -100,7 +106,11 @@ def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 # Define the function to get completion and token count
+<<<<<<< HEAD
 def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=20, max_tokens=200):
+=======
+def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=0, max_tokens=500):
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -120,6 +130,7 @@ def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", tem
 
 
 # Function to chat with Theresa
+<<<<<<< HEAD
 def chat_with_theresa(user_input, documents):
     """
     Generate a response from Theresa using the loaded documents.
@@ -139,6 +150,14 @@ def chat_with_theresa(user_input, documents):
     {document_references}
 
     Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would, referencing relevant content from the writings where appropriate.
+=======
+def chat_with_theresa(user_input, document_content):
+    prompt = f"""
+    You are Theresa, a wise and nurturing figure. You have written the following content:
+    {document_content}
+
+    Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would.
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
     User says: {user_input}
     """
 
@@ -170,8 +189,13 @@ def chat_with_theresa(user_input, documents):
 # Chat loop
 print(f"\nYou are now chatting with Theresa based on the content of {file_name}.")
 while True:
+<<<<<<< HEAD
     user_input = input("Esrom: ")
     if user_input.lower() == "1251":
+=======
+    user_input = input("You: ")
+    if user_input.lower() == "exit":
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
         print("Goodbye!")
         break
     
@@ -179,6 +203,7 @@ while True:
     response = chat_with_theresa(user_input, document_content)  # Only get the response, no need for unpacking
     print(f"Theresa: {response}")
 
+<<<<<<< HEAD
 
 # Define a simple Flask route that just has chat in terminal - Markd out
 # @app.route('/')
@@ -221,3 +246,5 @@ if __name__ == '__main__':
             print(f"Theresa: You said '{user_input}'")
     else:
         print("Invalid mode. Exiting.")
+=======
+>>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
