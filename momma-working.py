@@ -4,14 +4,9 @@ from openai import Client
 from docx import Document
 from dotenv import load_dotenv
 import tiktoken
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 import numpy as np
-app = Flask(__name__, template_folder='templates')
-
-@app.route('/test')
-def test():
-    return "Flask is working!"
-
+app = Flask(__name__)
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -100,7 +95,7 @@ def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 # Define the function to get completion and token count
-def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=20, max_tokens=200):
+def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=0, max_tokens=500):
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -170,8 +165,8 @@ def chat_with_theresa(user_input, documents):
 # Chat loop
 print(f"\nYou are now chatting with Theresa based on the content of {file_name}.")
 while True:
-    user_input = input("Esrom: ")
-    if user_input.lower() == "1251":
+    user_input = input("You: ")
+    if user_input.lower() == "exit":
         print("Goodbye!")
         break
     
@@ -180,15 +175,10 @@ while True:
     print(f"Theresa: {response}")
 
 
-# Define a simple Flask route that just has chat in terminal - Markd out
-# @app.route('/')
-# def home():
-#    return jsonify({"message": "Theresa is online!"})
-
-# Flask route for serving the index.html page
+# Define a simple Flask route
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return jsonify({"message": "Theresa is online!"})
 
 # Flask route for user chat
 @app.route('/chat', methods=['POST'])
@@ -207,17 +197,4 @@ def chat():
     return jsonify({"response": response})
 
 if __name__ == '__main__':
-    mode = input("Enter mode (flask/terminal): ").strip().lower()
-    if mode == 'flask':
-        app.run(host='0.0.0.0', port=5001)
-    elif mode == 'terminal':
-        print("You are now chatting with Theresa. Type 'exit' to quit.")
-        while True:
-            user_input = input("You: ")
-            if user_input.lower() == "exit":
-                print("Goodbye!")
-                break
-            # Simulate Theresa's response
-            print(f"Theresa: You said '{user_input}'")
-    else:
-        print("Invalid mode. Exiting.")
+    app.run(host='0.0.0.0', port=5000)
