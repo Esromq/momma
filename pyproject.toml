@@ -1,0 +1,4 @@
+[tool.poetry]
+name = "momma"
+version = "0.1.0"
+authors = ["Esrom <esromquarterman@gmail.com>"]
