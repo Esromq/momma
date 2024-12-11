@@ -4,17 +4,6 @@ from openai import Client
 from docx import Document
 from dotenv import load_dotenv
 import tiktoken
-<<<<<<< HEAD
-from flask import Flask, request, jsonify, render_template
-import numpy as np
-app = Flask(__name__, template_folder='templates')
-
-@app.route('/test')
-def test():
-    return "Flask is working!"
-
-=======
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -32,34 +21,6 @@ client = Client(api_key=api_key)  # Pass the API key to the client
 # Define the path to the folder containing doc files
 folder_path = "./static/files"
 
-<<<<<<< HEAD
-# Global variable to store document content
-documents_content = {}
-
-def load_documents(folder_path):
-    """
-    Load and parse all .docx files in the specified folder.
-    """
-    docs = {}
-    for filename in os.listdir(folder_path):
-        if filename.endswith('.docx'):
-            file_path = os.path.join(folder_path, filename)
-            doc = Document(file_path)
-            content = "\n".join([p.text for p in doc.paragraphs if p.text.strip()])
-            docs[filename] = content
-    return docs
-
-# Load documents at startup
-documents_content = load_documents(folder_path)
-if not documents_content:
-    print("No documents found in the folder.")
-else:
-    print(f"Loaded documents: {', '.join(documents_content.keys())}")
-
-
-
-=======
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
 # Function to list all .docx files in the folder
 def list_documents_in_folder(folder):
     documents = []
@@ -106,11 +67,7 @@ def cosine_similarity(vec1, vec2):
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 # Define the function to get completion and token count
-<<<<<<< HEAD
-def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=20, max_tokens=200):
-=======
 def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=0, max_tokens=500):
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -130,34 +87,12 @@ def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", tem
 
 
 # Function to chat with Theresa
-<<<<<<< HEAD
-def chat_with_theresa(user_input, documents):
-    """
-    Generate a response from Theresa using the loaded documents.
-    """
-    
-    if user_input.lower() == "what documents do you have access to?":
-        # List all available documents
-        document_list = "\n".join(f"- {name}" for name in documents.keys())
-        return f"I have access to the following documents:\n{document_list}"
-    
-        # Combine all document content for context
-    document_references = "\n\n".join([f"### {name}:\n{content}" for name, content in documents_content.items()])
-
-    # Construct the prompt
-    prompt = f"""
-    You are Theresa, the user's mother, a wise and nurturing figure. You have written and have access to the following writings:
-    {document_references}
-
-    Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would, referencing relevant content from the writings where appropriate.
-=======
 def chat_with_theresa(user_input, document_content):
     prompt = f"""
     You are Theresa, a wise and nurturing figure. You have written the following content:
     {document_content}
 
     Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would.
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
     User says: {user_input}
     """
 
@@ -189,62 +124,11 @@ def chat_with_theresa(user_input, document_content):
 # Chat loop
 print(f"\nYou are now chatting with Theresa based on the content of {file_name}.")
 while True:
-<<<<<<< HEAD
-    user_input = input("Esrom: ")
-    if user_input.lower() == "1251":
-=======
     user_input = input("You: ")
     if user_input.lower() == "exit":
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
         print("Goodbye!")
         break
     
     # Get the AI's response based on the document content
     response = chat_with_theresa(user_input, document_content)  # Only get the response, no need for unpacking
     print(f"Theresa: {response}")
-
-<<<<<<< HEAD
-
-# Define a simple Flask route that just has chat in terminal - Markd out
-# @app.route('/')
-# def home():
-#    return jsonify({"message": "Theresa is online!"})
-
-# Flask route for serving the index.html page
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-# Flask route for user chat
-@app.route('/chat', methods=['POST'])
-def chat():
-    """
-    Endpoint to interact with Theresa via API.
-    Expects JSON input with a "user_input" key.
-    """
-    data = request.json
-    user_input = data.get("user_input", "")
-    if not user_input:
-        return jsonify({"error": "No input provided."}), 400
-
-    # Respond to user input using all document content
-    response = chat_with_theresa(user_input, document_content)
-    return jsonify({"response": response})
-
-if __name__ == '__main__':
-    mode = input("Enter mode (flask/terminal): ").strip().lower()
-    if mode == 'flask':
-        app.run(host='0.0.0.0', port=5001)
-    elif mode == 'terminal':
-        print("You are now chatting with Theresa. Type 'exit' to quit.")
-        while True:
-            user_input = input("You: ")
-            if user_input.lower() == "exit":
-                print("Goodbye!")
-                break
-            # Simulate Theresa's response
-            print(f"Theresa: You said '{user_input}'")
-    else:
-        print("Invalid mode. Exiting.")
-=======
->>>>>>> 3635e526d418fbdcea88f39840b4274ce4c9faf4
