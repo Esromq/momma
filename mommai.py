@@ -1,11 +1,11 @@
 import os
-import openai
+import openai 
 from openai import Client
+from flask import Flask, request, jsonify, render_template
 from docx import Document
 from dotenv import load_dotenv
-import tiktoken
-from flask import Flask, request, jsonify, render_template
 import numpy as np
+
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/test')
@@ -99,25 +99,6 @@ def cosine_similarity(vec1, vec2):
     vec2 = np.array(vec2)
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
-# Define the function to get completion and token count
-def get_completion_and_token_count(messages, model="gpt-4o-mini-2024-07-18", temperature=20, max_tokens=200):
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature, 
-        max_tokens=max_tokens,
-    )
-    
-    content = response.choices[0].message.content  # Corrected access
-    
-    token_dict = {
-        'prompt_tokens': response['usage']['prompt_tokens'],
-        'completion_tokens': response['usage']['completion_tokens'],
-        'total_tokens': response['usage']['total_tokens'],
-    }
-
-    return content, token_dict
-
 
 # Function to chat with Theresa
 def chat_with_theresa(user_input, documents):
@@ -125,20 +106,20 @@ def chat_with_theresa(user_input, documents):
     Generate a response from Theresa using the loaded documents.
     """
     
-    if user_input.lower() == "what documents do you have access to?":
+    if user_input.lower() == "Show Docs":
         # List all available documents
-        document_list = "\n".join(f"- {name}" for name in documents.keys())
-        return f"I have access to the following documents:\n{document_list}"
-    
+        return f"I have access to: {', '.join(documents.keys())}"
+
+   
         # Combine all document content for context
     document_references = "\n\n".join([f"### {name}:\n{content}" for name, content in documents_content.items()])
 
     # Construct the prompt
     prompt = f"""
-    You are Theresa, the user's mother, a wise and nurturing figure. You have written and have access to the following writings:
+    You are Theresa, the user's mother, a wise and nurturing figure. You have have access to and have written the following writings as a guide to your sons, the user.:
     {document_references}
 
-    Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would, referencing relevant content from the writings where appropriate.
+    Respond to the user's queries based on this content. Provide advice and wisdom as Theresa would, referencing relevant content from the writings where appropriate. Ensure to let the user know where the advice is referenced in the writings.:
     User says: {user_input}
     """
 
@@ -146,13 +127,9 @@ def chat_with_theresa(user_input, documents):
     try: 
         response = client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",  # Ensure the model is available and supports this functionality
-            messages=[{
-                "role": "system", 
-                "content": "You are Theresa, a concerned mother of the user, wise and nurturing; referencing her writings."
-            }, {
-                "role": "user", 
-                "content": user_input
-            }],
+            messages=[
+                {"role": "system" , "content": "You are Theresa, a concerned mother of the user, wise and nurturing; constantly referring to her writi  ngs."},
+                {"role": "user", "content": user_input}],
             max_tokens=800,
             temperature=0.7,
         )
@@ -163,9 +140,6 @@ def chat_with_theresa(user_input, documents):
 
     except Exception as e:
         return f"An error occurred: {e}"
-
-        
-
 
 # Chat loop
 print(f"\nYou are now chatting with Theresa based on the content of {file_name}.")
