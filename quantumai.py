@@ -2,7 +2,6 @@ import os
 import docx
 import openai
 import dotenv
-from openai import Client
 import speech_recognition as sr
 from dotenv import load_dotenv
 from gtts import gTTS
@@ -21,7 +20,7 @@ if not openai_api_key:
     raise ValueError("API key is missing from environment variables.")
 
 # Initialize the OpenAI client
-client = Client(api_key=openai_api_key)  # Pass the API key to the client
+api_key=openai_api_key  # Pass the API key to the client
 
 # Global Variables
 user_name = "Esrom"  # Set your name here
@@ -42,7 +41,7 @@ def load_documents(folder_path):
 
 # Summarize document using GPT-4
 def summarize_document(content):
-    response = client.chat.completions.create(
+    response = openai.Completion.create(
         model="gpt-4o-mini-2024-07-18",
         messages=[
             {"role": "system", "content": "Summarize context from the following content into a short paragraph."},
@@ -91,7 +90,7 @@ def chat_with_theresa(user_input, documents):
     ]
     
     # Generate GPT response
-    response = client.chat.completions.create(
+    response = openai.Completion.create(
         model="gpt-4o-mini-2024-07-18",
         messages=prompt,
         max_tokens=1000,
