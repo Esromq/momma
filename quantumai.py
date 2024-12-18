@@ -70,7 +70,7 @@ def chat_with_theresa(user_input, documents):
     global conversation_history
 
     # Combine all document content into one prompt context
-    document_context = "\n\n".join([content for content in documents.values()])
+    document_context = "\n\n".join([content for content in documents])
 
     # Perform sentiment analysis
     sentiment = analyze_sentiment(user_input)
@@ -92,7 +92,7 @@ def chat_with_theresa(user_input, documents):
     )
     
     # Correctly access the content of the response
-    content = response.choices[0].text.strip()
+    content = response.choices[0].message['content']     
 
     # Adjust tone based on sentiment
     final_response = adjust_response_tone(content, sentiment)
