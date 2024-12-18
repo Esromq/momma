@@ -41,7 +41,7 @@ def load_documents(folder_path):
 
 # Summarize document using GPT-4
 def summarize_document(content):
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         prompt=f"Summarize the following document content:\n{content}",
         max_tokens=150
@@ -84,7 +84,7 @@ def chat_with_theresa(user_input, documents):
     ]
     
     # Generate GPT response
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=prompt,
         max_tokens=1000,
