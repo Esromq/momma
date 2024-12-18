@@ -42,16 +42,11 @@ def load_documents(folder_path):
 # Summarize document using GPT-4
 def summarize_document(content):
     response = openai.Completion.create(
-        model="gpt-4o-mini-2024-07-18",
-        messages=[
-            {"role": "system", "content": "Summarize context from the following content into a short paragraph."},
-            {"role": "user", "content": content},
-                    ],
+        model="gpt-4",
+        prompt=f"Summarize the following document content:\n{content}",
         max_tokens=150
     )
-    
-    content = response.choices[0].message.content  # Corrected attribute access
-    return response
+    return response.choices[0].text.strip()
 
 # Perform sentiment analysis on input
 def analyze_sentiment(user_input):
@@ -75,7 +70,7 @@ def chat_with_theresa(user_input, documents):
     global conversation_history
 
     # Combine all document content into one prompt context
-    document_context = "\n\n".join([content for content in documents])
+    document_context = "\n\n".join([content for content in documents.values()])
 
     # Perform sentiment analysis
     sentiment = analyze_sentiment(user_input)
@@ -86,26 +81,24 @@ def chat_with_theresa(user_input, documents):
         *conversation_history[-5:],  # Include up to 5 previous exchanges
         {"role": "user", "content": f"Context:\n{document_context}\n\nUser: {user_input}"},
         {"role": "system", "content": document_context}  # Added context from documents
-    
     ]
     
     # Generate GPT response
     response = openai.Completion.create(
-        model="gpt-4o-mini-2024-07-18",
+        model="gpt-4",
         messages=prompt,
         max_tokens=1000,
         temperature=0.3
     )
     
     # Correctly access the content of the response
-    content = response.choices[0].message.content  # Corrected attribute access
+    content = response.choices[0].text.strip()
 
     # Adjust tone based on sentiment
     final_response = adjust_response_tone(content, sentiment)
     
-     # Always call the user "Esrom"
+    # Always call the user "Esrom"
     final_response = f"{final_response}"
-
 
     # Update conversation history
     conversation_history.append({"role": "user", "content": user_input})
@@ -115,37 +108,25 @@ def chat_with_theresa(user_input, documents):
 
 # Example Usage
 user_input = input("Hello Dear")
-response = chat_with_theresa(user_input, documents=[])
+response = chat_with_theresa(user_input, documents={})
 print(response)
+
+##### SPEECH AND VOICE FUNCTIONS #####
 
 def text_to_speech(text, lang='en', slow=False):
     """
     Convert text to speech and play it using the system's default player.
     """
-    tts = gTTS(text=text, lang='en', slow=slow)
+    tts = gTTS(text=text, lang=lang, slow=slow)
     tts.save("response.mp3")
     print("Speech saved as response.mp3")
     os.system("start response.mp3")  # For Windows. Use 'afplay' for macOS or 'mpg123' for Linux.
 
 # Example usage:
 user_input = "Hey Momma!"
-documents = ["Document 1 content", "Document 2 content"]  # Example documents list
-response_text = chat_with_theresa(user_input, documents)
+response_text = chat_with_theresa(user_input, documents={})
 text = "Hi Son, this is Momma-AI, Also Known as Theresa-AI speaking!"
 text_to_speech(text, lang='en', slow=False)  # English with slower speech
-
-def text_to_speech(text):
-    """
-    Convert text to speech and play it using the system's default player.
-    """
-    tts = gTTS(text=text, lang='en')
-    tts.save("response.mp3")
-    print("Speech saved as response.mp3")
-    os.system("start response.mp3")  # For Windows. Use 'afplay' for macOS or 'mpg123' for Linux.
-    
-# Example usage:
-user_input = "Hey Momma!"
-text_to_speech(response_text)
 
 ##### VOICE FUNCTIONS #####
 
@@ -170,7 +151,6 @@ def get_voice_input():
         except sr.RequestError as e:
             print(f"Could not request results; {e}")
             return None
-
 
 ##### FLASK ROUTES #####
 
@@ -216,3 +196,4 @@ if __name__ == "__main__":
 
     # Start Flask app
     app.run(debug=True)
+
