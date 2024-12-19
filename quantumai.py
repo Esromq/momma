@@ -2,7 +2,6 @@ import os
 import docx
 import openai
 import dotenv
-import request
 import speech_recognition as sr
 from dotenv import load_dotenv
 from gtts import gTTS
@@ -121,7 +120,7 @@ def text_to_speech(text, lang='en', slow=False):
     tts = gTTS(text=text, lang=lang, slow=slow)
     tts.save("response.mp3")
     print("Speech saved as response.mp3")
-    os.system("mpg123 /root/ish/momma/response.mp3")  # For ios. Use 'afplay' for macOS or 'mpg123' for Linux.
+    os.system("start response.mp3")  # For Windows. Use 'afplay' for macOS or 'mpg123' for Linux.
 
 # Example usage:
 user_input = "Hey Momma!"
