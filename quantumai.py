@@ -16,8 +16,6 @@ load_dotenv(dotenv_path="/root/momma/venv/env")  # Load environment variables fr
 # Set up the OpenAI API key (ensure you have it in the .env file or set it directly here)
 openai_api_key = os.getenv("OPENAI_API_KEY")  # Retrieve the API key from environment variables
 
-ELEVENLABS_API_KEY = "sk_4d4330253a6d6e942583661e7cc2caad16f753c32f29cffd"
-
 # Check if the API key is not found
 if not openai_api_key:
     raise ValueError("API key is missing from environment variables.")
